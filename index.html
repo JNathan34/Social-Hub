@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b111b">
+  <meta name="description" content="SocialHub — a private workspace for your social channels.">
+  <title>SocialHub — Workspace</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+<div class="app-shell" id="app-shell">
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <a class="brand" href="#overview" aria-label="SocialHub overview">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>social<span class="brand-accent">hub</span></span>
+    </a>
+    <button class="workspace-card" data-page="overview" type="button">
+      <span class="workspace-initial" id="workspace-initial">S</span>
+      <span class="workspace-copy"><strong>My workspace</strong><small>Personal analytics</small></span>
+    </button>
+    <nav class="navigation" aria-label="Workspace">
+      <p class="nav-section-title">Workspace</p>
+      <button class="nav-item" data-page="overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+      <p class="nav-section-title">Platforms</p>
+      <button class="nav-item" data-page="facebook"><img alt="" src="https://api.iconify.design/logos:facebook.svg"><span>Facebook</span><span class="nav-dot"></span></button>
+      <button class="nav-item" data-page="instagram"><img alt="" src="https://api.iconify.design/skill-icons:instagram.svg"><span>Instagram</span><span class="nav-dot"></span></button>
+      <button class="nav-item" data-page="tiktok"><img alt="" src="https://api.iconify.design/logos:tiktok-icon.svg"><span>TikTok</span><span class="nav-dot"></span></button>
+      <button class="nav-item" data-page="youtube"><img alt="" src="https://api.iconify.design/logos:youtube-icon.svg"><span>YouTube</span><span class="nav-dot"></span></button>
+      <p class="nav-section-title">Analyse</p>
+      <button class="nav-item" data-page="audience"><i data-lucide="users-round"></i><span>Audience</span></button>
+      <button class="nav-item" data-page="content"><i data-lucide="files"></i><span>Content</span></button>
+      <p class="nav-section-title">Preferences</p>
+      <button class="nav-item" data-page="connections"><i data-lucide="link-2"></i><span>Connections</span></button>
+      <button class="nav-item" data-page="settings"><i data-lucide="settings-2"></i><span>Settings</span></button>
+    </nav>
+    <button class="sidebar-profile" id="sidebar-profile" type="button" aria-label="Open profile menu">
+      <span class="avatar avatar-sidebar" data-avatar>SH</span>
+      <span class="sidebar-profile-copy"><strong data-profile-name>Workspace owner</strong><small>Private workspace</small></span>
+      <i data-lucide="chevron-up" class="sidebar-chevron"></i>
+    </button>
+  </aside>
+  <div class="mobile-shade" id="mobile-shade" hidden></div>
+  <div class="main-column">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-button mobile-menu-button" id="mobile-menu" aria-label="Open navigation" aria-expanded="false" type="button"><i data-lucide="menu"></i></button>
+        <span class="breadcrumb-base">Workspace</span><span class="breadcrumb-separator">/</span><strong id="breadcrumb-page">Overview</strong>
+      </div>
+      <div class="topbar-right">
+        <span class="private-status"><span class="status-light"></span>Private workspace</span>
+        <button class="icon-button refresh-button" id="refresh-button" title="Refresh workspace" aria-label="Refresh workspace" type="button"><i data-lucide="refresh-cw"></i></button>
+        <button class="topbar-avatar avatar" type="button" id="topbar-profile" data-avatar aria-haspopup="menu" aria-expanded="false" aria-label="Open profile menu">SH</button>
+      </div>
+    </header>
+    <main class="main-content" id="main-content" tabindex="-1"></main>
+  </div>
+</div>
+<div class="profile-menu" id="profile-menu" role="menu" aria-label="Profile menu" hidden>
+  <div class="menu-heading"><span class="avatar avatar-menu" data-avatar>SH</span><span><strong data-profile-name>Workspace owner</strong><small>Private workspace</small></span></div>
+  <button class="menu-action" data-menu-action="profile" role="menuitem"><i data-lucide="user-round"></i>My Profile</button>
+  <button class="menu-action" data-menu-action="settings" role="menuitem"><i data-lucide="settings-2"></i>Account Settings</button>
+  <div class="menu-divider"></div>
+  <button class="menu-action danger-action" data-menu-action="signout" role="menuitem"><i data-lucide="log-out"></i>Sign out</button>
+</div>
+<div class="modal-overlay" id="modal-overlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <button class="icon-button modal-close" id="modal-close" aria-label="Close dialog" type="button"><i data-lucide="x"></i></button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
