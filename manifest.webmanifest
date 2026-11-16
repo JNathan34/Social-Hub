@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "SocialHub",
+  "short_name": "SocialHub",
+  "description": "Your social media, in one place.",
+  "start_url": "./#overview",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090f18",
+  "theme_color": "#0b111b",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
