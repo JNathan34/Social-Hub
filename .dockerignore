@@ -1,0 +1,8 @@
+node_modules
+.env
+.token-key
+.session-key
+data
+.git
+*.zip
+README.md

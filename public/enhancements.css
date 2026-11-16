@@ -1,0 +1,154 @@
+/* SocialHub 1.3 — navigation, official-style brandmarks and shared profile controls */
+.brand-mark { background:transparent !important; padding:0 !important; overflow:hidden; width:36px; height:36px; border-radius:10px; }
+.brand-mark img {display:block;width:100%;height:100%;object-fit:contain;}
+.login-mark .brand-mark { width:45px;height:45px; }
+.breadcrumb {display:flex;align-items:center;gap:13px; font-size:16px; font-weight:650; white-space:nowrap;}
+.breadcrumb span {margin:0;color:#61748b;font-weight:500;}
+.crumb-link {border:0;background:transparent;color:#a8b7ca;font:650 16px var(--font);padding:9px 3px;border-radius:5px;transition:color .17s;}
+.crumb-link.current {color:#f6f8fc;font-weight:800;}
+.crumb-link:hover {color:#cbb9ff;}
+.crumb-link:focus-visible {outline:2px solid #ad94ff;outline-offset:2px;}
+.topbar-right {gap:13px;}
+#refreshBtn {width:43px;height:43px;border:1px solid #34465d;transition:background .16s, border-color .16s;}
+#refreshBtn:hover {background:#25344a;border-color:#7562b0;}
+#refreshBtn .ui-icon {width:23px;height:23px;stroke-width:2.2;transform-origin:center;}
+#refreshBtn.is-refreshing .ui-icon {animation:socialhub-refresh .8s linear infinite;}
+@keyframes socialhub-refresh {to{transform:rotate(360deg);}}
+.platform-icon.tt, .connect-logo.tt {background:#141b25 !important;color:#fff!important;}
+.platform-icon.tt .ui-icon, .connect-logo.tt .ui-icon {fill:none;}
+.platform-icon.fb, .connect-logo.fb {background:#1877f2 !important;color:#fff;}
+.platform-icon.ig, .connect-logo.ig {background:linear-gradient(35deg,#feda75,#fa7e1e 24%,#d62976 57%,#962fbf 81%,#4f5bd5) !important;color:#fff;}
+.platform-icon.yt,.connect-logo.yt {background:#ff0033 !important;color:#fff;}
+.connect-logo {width:60px;height:60px;border-radius:17px; box-shadow: inset 0 1px #ffffff20;}
+.connect-logo .ui-icon {width:33px;height:33px;}
+.connect-logo.tt .ui-icon {width:35px;height:35px;}
+.nav-glyph .ui-icon {width:21px;height:21px;}
+.user-chip.sidebar-profile {width:100%;display:flex;align-items:center;text-align:left;border:1px solid transparent;border-radius:13px;background:transparent;cursor:pointer;color:inherit;padding:12px 8px;transition:background .16s,border-color .16s;}
+.user-chip.sidebar-profile:hover,.user-chip.sidebar-profile[aria-expanded="true"] {background:#19273a;border-color:#334157;}
+.user-details {display:flex;flex-direction:column;min-width:0;flex:1;}
+.user-details strong {white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-details small {color:#91a4bb;}
+.profile-chevron {width:17px;height:17px;opacity:.7;flex:none;}
+.profile-trigger {cursor:pointer;}
+.profile-trigger .avatar-image, [data-profile-avatar] .avatar-image, .profile-large-avatar .avatar-image {width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;}
+.top-avatar {display:grid;place-items:center;padding:0;overflow:hidden;width:42px;height:42px;min-width:42px; border:2px solid transparent;box-shadow:0 0 0 1px #5b4a88;font-size:13px;color:#ded0ff;}
+.top-avatar:hover,.top-avatar[aria-expanded="true"] {border-color:#b49dff;}
+.user-avatar {overflow:hidden;width:45px;height:45px;border-radius:12px;flex:none;}
+.profile-menu {position:fixed;z-index:65;width:280px;padding:9px;border:1px solid #37445b;background:#172235;color:#edf2fb;box-shadow:0 24px 55px #0009;border-radius:16px;animation:profile-appear .16s ease-out;}
+.profile-menu.hidden {display:none;}
+@keyframes profile-appear {from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.profile-menu-head {display:flex;gap:12px;align-items:center;padding:13px 12px 16px;}
+.profile-menu-head strong {display:block;font:750 14px var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+.profile-menu-head small {display:block;font-size:12px;color:#9eacc0;margin-top:3px;}
+.menu-avatar {width:42px;height:42px;border-radius:12px;background:#362a55;color:#e7dcff;display:grid;place-items:center;font-weight:800;overflow:hidden;flex:none;}
+.profile-menu-items {display:flex;flex-direction:column;gap:3px;}
+.profile-menu-items button {width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;border-radius:9px;padding:12px;color:#d7e0ec;font-size:14px;font-weight:650;background:transparent;}
+.profile-menu-items button:hover,.profile-menu-items button:focus-visible {background:#28354c;color:white;}
+.profile-menu-items .ui-icon {width:19px;height:19px;}
+.profile-menu-rule {border-top:1px solid #354358;margin:6px 2px;}
+.profile-menu-items .signout-option {color:#ffb6be;}
+.profile-modal-backdrop {position:fixed;inset:0;z-index:80;background:#03070cd8;display:flex;align-items:center;justify-content:center;padding:18px;}
+.profile-modal-backdrop.hidden {display:none;}
+.profile-dialog {width:min(480px,100%);background:#142033;border:1px solid #41506a;border-radius:20px;padding:28px;box-shadow:0 24px 90px #000b;}
+.profile-dialog-header {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:24px;}
+.profile-dialog-header h2 {font:800 26px var(--head);margin:0;letter-spacing:-.7px;}
+.profile-dialog-header p {font-size:14px;color:#9eabc0;margin:7px 0 0;}
+.profile-dialog-close {height:38px;width:38px;border:1px solid #34465d;background:#1c2b3d;color:#cdd8e8;border-radius:10px;display:grid;place-items:center;flex:none;}
+.profile-dialog-close:hover {background:#273c53;}
+.profile-photo-row {display:flex;align-items:center;gap:18px;padding:20px;background:#101a2a;border:1px solid #2e3e52;border-radius:14px;margin-bottom:24px;}
+.profile-large-avatar {width:78px;height:78px;border-radius:18px;background:#3a2f59;display:grid;place-items:center;font-weight:800;font-size:24px;color:#ded0ff;overflow:hidden;flex:none;}
+.profile-photo-row>div {min-width:0;}
+.profile-upload-label {cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:9px;background:#252f46;border:1px solid #43516a;font-weight:700;font-size:13px;}
+.profile-upload-label:hover {background:#34415b;}
+#profilePhotoFile {position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;}
+.profile-upload-label .ui-icon {width:17px;height:17px;}
+.profile-remove-photo {display:block;margin-top:9px;border:0;padding:3px 0;background:none;color:#b9a6ff;font-size:12px;}
+.profile-photo-row p {color:#7e90a7;font-size:11px;margin:8px 0 0;}
+.profile-field-label {display:block;font-size:13px;color:#d0daea;font-weight:700;margin-bottom:8px;}
+#profileDisplayName {width:100%;height:47px;border:1px solid #43516a;background:#0d1828;color:#eff4fa;border-radius:10px;padding:0 14px;font-size:15px;}
+#profileDisplayName:focus {border-color:#a28fff;outline:none;box-shadow:0 0 0 3px #9e8bff24;}
+.profile-form-error {min-height:18px;margin:8px 0;color:#ff9ca7;font-size:12px;}
+.profile-dialog-actions {display:flex;justify-content:flex-end;gap:10px;}
+.profile-dialog-actions .button {min-width:135px;}
+@media(max-width:760px) {.breadcrumb,.crumb-link{font-size:14px;}.top-avatar{width:38px;height:38px;min-width:38px;}.topbar-right{gap:9px;}.profile-menu{width:min(280px,calc(100vw - 24px));}.secure-label{display:none}}
+@media(max-width:470px) {.crumb-link{font-size:13px;padding:7px 0;}.breadcrumb{gap:7px;}.breadcrumb span{margin:0 2px;}.topbar{padding:0 12px;}.topbar-right{gap:6px;}.profile-dialog{padding:22px;}.profile-photo-row{gap:12px;padding:14px;}.profile-large-avatar{width:60px;height:60px;}.profile-upload-label{font-size:12px;}}
+@media(prefers-reduced-motion:reduce){#refreshBtn.is-refreshing .ui-icon{animation:none}.profile-menu{animation:none}}
+
+/* Keep the owner profile pinned at the bottom, rather than below the fold. */
+.sidebar {overflow:hidden;}
+.sidebar .nav {overflow-y:auto;min-height:0;flex:1;scrollbar-width:thin;scrollbar-color:#344257 transparent;}
+.sidebar-bottom {flex-shrink:0;background:#0e1520;border-top:1px solid #273549;padding-top:8px;}
+
+
+/* SocialHub v1.4 — consistent, externally sourced Font Awesome Free icons. */
+.ui-icon, .nav-glyph .ui-icon, .profile-menu .ui-icon {
+  stroke: none !important;
+  stroke-width: 0 !important;
+  fill: currentColor;
+  flex-shrink: 0;
+  overflow: visible;
+}
+/* TikTok brand mark carries its own official cyan, pink and white layer fills. */
+.platform-icon.tt, .connect-logo.tt { background: #111820 !important; color:#fff !important; }
+.platform-icon.tt .ui-icon, .connect-logo.tt .ui-icon { fill: initial !important; }
+/* The Font Awesome YouTube brand glyph uses a transparent play-shaped knockout.
+   White tile makes its triangle white rather than a red/purple cutout. */
+.platform-icon.yt, .connect-logo.yt {
+  background: #fff !important;
+  color: #ff0033 !important;
+  border: 1px solid rgba(255,255,255,.15);
+}
+.platform-icon.yt .ui-icon, .connect-logo.yt .ui-icon { fill: #ff0033 !important; }
+.connection-hero .empty-icon.platform-youtube {
+  background: #ffffff !important;
+  border-color: #ffffff;
+  color: #ff0033 !important;
+}
+.connection-hero .empty-icon.platform-youtube .ui-icon { fill: #ff0033 !important; }
+.connection-hero .empty-icon.platform-tiktok {
+  background:#101720 !important;
+  border-color:#303d50;
+}
+.connection-hero .empty-icon.platform-facebook {
+  background:#1877f2 !important;
+  color:#ffffff !important;
+  border-color:#3185fa;
+}
+.connection-hero .empty-icon.platform-instagram {
+  background:linear-gradient(35deg,#feda75,#fa7e1e 24%,#d62976 57%,#962fbf 81%,#4f5bd5) !important;
+  color:#fff !important;
+  border-color:#bd4a9a;
+}
+/* Restore generous full-width navigation hitboxes. No flex row may shrink to
+   squeeze every item into the visible height: the nav itself scrolls. */
+.sidebar .nav { width:100%; align-items:stretch; overflow-x:hidden; padding-right:3px; }
+.sidebar .nav .nav-link {
+  width:100%; min-width:0; min-height:54px; height:54px;
+  flex:0 0 54px; justify-content:flex-start;
+  border-radius:12px; padding:0 14px;
+  font-size:15px; font-weight:650;
+  white-space:nowrap; cursor:pointer;
+}
+.sidebar .nav .nav-heading { flex:0 0 auto; }
+.sidebar .nav .nav-status { margin-left:auto; flex-shrink:0; }
+.sidebar .nav .nav-link.active { background:#302542; box-shadow:inset 4px 0 0 #ac91ff; }
+.sidebar .nav .nav-link:hover:not(.active) { background:#1d2b3e; }
+.sidebar .nav .nav-link:focus-visible { outline:2px solid #b49dff; outline-offset:-2px; }
+.sidebar .nav-glyph { flex:0 0 26px; }
+.sidebar .platform-icon { flex:0 0 26px; width:26px;height:26px; }
+.sidebar .nav { scrollbar-width:thin; scrollbar-color:#465671 transparent; }
+/* Keep the sidebar's owner profile pinned, independent of nav scrolling. */
+.sidebar-bottom { width:100%; z-index:1; }
+/* Slightly clearer icon sizing and alignment in the profile dropdown. */
+.profile-menu-items button .ui-icon {width:20px;height:20px;flex:0 0 20px;}
+.profile-menu-items button {min-height:48px;}
+#refreshBtn .ui-icon {width:20px;height:20px;}
+.connect-logo .ui-icon {width:34px;height:34px;}
+.connect-logo.tt .ui-icon {width:36px;height:36px;}
+.connect-logo.yt .ui-icon {width:37px;height:37px;}
+.platform-icon.tt .ui-icon {width:20px;height:20px;}
+.platform-icon.yt .ui-icon {width:19px;height:19px;}
+@media (max-width:760px) {
+  .sidebar .nav .nav-link { min-height:54px; height:54px; flex-basis:54px; }
+  .sidebar .nav {padding-right:2px;}
+}

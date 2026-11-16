@@ -1,0 +1,16 @@
+services:
+  socialhub:
+    build: .
+    container_name: socialhub
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      DATA_DIR: /var/data
+      APP_URL: ${APP_URL:-http://localhost:3000}
+    ports:
+      - "3000:3000"
+    volumes:
+      - socialhub-data:/var/data
+volumes:
+  socialhub-data:
