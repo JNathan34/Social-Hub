@@ -7,10 +7,10 @@
   var prefs=readJSON(KEY_PREFS,{hideTips:false,compact:false});
   var titles={overview:"Overview",facebook:"Facebook",instagram:"Instagram",tiktok:"TikTok",youtube:"YouTube",audience:"Audience",content:"Content",connections:"Connections",settings:"Settings"};
   var social=[
-    {id:"facebook",name:"Facebook",logo:"https://api.iconify.design/logos:facebook.svg",description:"Facebook Pages, post engagement and Page insights.",requirement:"A Facebook Page with sufficient permissions and access to the Page Insights API.",docs:"https://developers.facebook.com/docs/pages-api/"},
-    {id:"instagram",name:"Instagram",logo:"https://api.iconify.design/skill-icons:instagram.svg",description:"Instagram Creator and Business profile, media and available insights.",requirement:"An Instagram professional account and an approved Meta app.",docs:"https://developers.facebook.com/docs/instagram-platform/"},
-    {id:"tiktok",name:"TikTok",logo:"https://api.iconify.design/logos:tiktok-icon.svg",description:"TikTok profile statistics and recent public videos.",requirement:"A TikTok Developer app with approval for the relevant Login Kit and API scopes.",docs:"https://developers.tiktok.com/"},
-    {id:"youtube",name:"YouTube",logo:"https://api.iconify.design/logos:youtube-icon.svg",description:"YouTube channel statistics, video performance and comments.",requirement:"Google OAuth credentials with the YouTube Data API and YouTube Analytics API.",docs:"https://developers.google.com/youtube/v3"}
+    {id:"facebook",name:"Facebook",logo:"https://api.iconify.design/logos/facebook.svg",description:"Facebook Pages, post engagement and Page insights.",requirement:"A Facebook Page with sufficient permissions and access to the Page Insights API.",docs:"https://developers.facebook.com/docs/pages-api/"},
+    {id:"instagram",name:"Instagram",logo:"https://api.iconify.design/skill-icons/instagram.svg",description:"Instagram Creator and Business profile, media and available insights.",requirement:"An Instagram professional account and an approved Meta app.",docs:"https://developers.facebook.com/docs/instagram-platform/"},
+    {id:"tiktok",name:"TikTok",logo:"https://api.iconify.design/logos/tiktok-icon.svg",description:"TikTok profile statistics and recent public videos.",requirement:"A TikTok Developer app with approval for the relevant Login Kit and API scopes.",docs:"https://developers.tiktok.com/"},
+    {id:"youtube",name:"YouTube",logo:"https://api.iconify.design/logos/youtube-icon.svg",description:"YouTube channel statistics, video performance and comments.",requirement:"Google OAuth credentials with the YouTube Data API and YouTube Analytics API.",docs:"https://developers.google.com/youtube/v3"}
   ];
   var el=function(id){return document.getElementById(id);};
   var e=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];});};
