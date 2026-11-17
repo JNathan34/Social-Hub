@@ -21,45 +21,13 @@ let refreshing = false;
 let toastTimer;
 let installPrompt = null;
 
-function showLoginGate(message='') {
-  const gate=$('#loginGate'); gate.classList.remove('hidden'); gate.setAttribute('aria-hidden','false');
-  const msg=$('#loginMessage'); if(message) msg.textContent=message;
-  document.body.classList.add('login-active');
-}
-function hideLoginGate() {
-  const gate=$('#loginGate'); gate.classList.add('hidden'); gate.setAttribute('aria-hidden','true');
-  document.body.classList.remove('login-active');
-}
 async function api(url, options={}) {
   const res = await fetch(url, { ...options, headers:{ ...(options.body?{'Content-Type':'application/json'}:{}), ...(options.headers||{}) } });
   let data; try { data = await res.json(); } catch { data = {}; }
-  if (res.status === 401 && data.unauthenticated) showLoginGate();
   if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
   return data;
 }
 
-$('#loginForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const button=$('#loginSubmit'), message=$('#loginMessage'), password=$('#loginPassword').value;
-  message.textContent=''; button.disabled=true; button.textContent='Signing in…';
-  try {
-    const response=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
-    const result=await response.json().catch(()=>({}));
-    if(!response.ok) throw new Error(result.error||'Could not sign in.');
-    $('#loginPassword').value=''; hideLoginGate(); await loadState();
-    const params=new URLSearchParams(location.search);
-    if(params.has('oauth_error')) showNotice(params.get('oauth_error'),'error');
-    else if(params.has('connected')) showNotice(`${PLATFORM[params.get('connected')]?.name||'Account'} connected. SocialHub has attempted its first data sync.`,'success');
-    if(params.has('oauth_error')||params.has('connected')) history.replaceState({},'',location.pathname);
-  } catch(error) { message.textContent=error.message; }
-  finally { button.disabled=false; button.textContent='Sign in'; }
-});
-async function signOut() {
-  closeProfileMenu(); closeProfileDialog();
-  try { await fetch('/api/logout',{method:'POST'}); } catch (e) { notify('Could not reach the server.'); }
-  state=null;
-  showLoginGate('You have signed out.');
-}
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault(); installPrompt=event; $('#installBtn').hidden=false;
 });
@@ -418,19 +386,12 @@ $('#contentModal').addEventListener('click',e=>{if(e.target.id==='contentModal')
 
 (async()=>{
   try {
-    const session=await api('/api/session');
-    if(!session.passwordConfigured) {
-      showLoginGate('Owner password is not configured. Set APP_PASSWORD in the server environment, then restart SocialHub.');
-      $('#loginPassword').disabled=true; $('#loginSubmit').disabled=true;
-      return;
-    }
-    if(!session.authenticated) { showLoginGate(); return; }
-    hideLoginGate(); await loadState();
+    await loadState();
     const params=new URLSearchParams(location.search);
     if(params.has('oauth_error'))showNotice(params.get('oauth_error'),'error');
     else if(params.has('connected'))showNotice(`${PLATFORM[params.get('connected')]?.name||'Account'} connected. SocialHub has attempted its first data sync.`,'success');
     if(params.has('oauth_error')||params.has('connected'))history.replaceState({},'',location.pathname);
     // Keep the dashboard current without hammering provider APIs. API responses are never cached by the service worker.
     setInterval(()=>{if(document.visibilityState==='visible'&&Object.keys(state?.accounts||{}).length)refresh();},30*60*1000);
-  } catch(e) { if(!e.message.includes('sign in')) $('#pageContent').innerHTML=emptyBlock('Could not load SocialHub',e.message,'Reload', 'overview'); }
-})();
+  } catch(e) { $('#pageContent').innerHTML=emptyBlock('Could not load SocialHub',e.message,'Reload', 'overview'); }
+})();;
