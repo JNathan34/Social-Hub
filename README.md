@@ -14,6 +14,8 @@
     <img alt="Private workspace" src="https://img.shields.io/badge/workspace-private-1a2637?style=flat-square">
   </p>
 
+  **🌐 [Open the live website](https://social-hub-bjt.pages.dev/)**
+
   **[Explore features](#features) · [Get started](#getting-started) · [Connect platforms](#social-platforms) · [Deployment guide](docs/SETUP.md)**
 </div>
 
