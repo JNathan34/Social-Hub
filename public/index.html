@@ -53,26 +53,11 @@
     </div>
   </main>
 </div>
-<div class="profile-menu hidden" id="profileMenu" role="menu" aria-label="Workspace profile menu"><div class="profile-menu-head"><span class="menu-avatar profile-initials" data-profile-avatar>SH</span><span><strong data-profile-name>Workspace owner</strong><small>Private workspace</small></span></div><div class="profile-menu-items"><button type="button" role="menuitem" data-profile-action="edit"><svg class="ui-icon" aria-hidden="true"><use href="#icon-user"></use></svg>My Profile</button><button type="button" role="menuitem" data-profile-action="settings"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg>Account Settings</button><div class="profile-menu-rule"></div><button type="button" role="menuitem" class="signout-option" data-profile-action="logout"><svg class="ui-icon" aria-hidden="true"><use href="#icon-log-out"></use></svg>Sign out</button></div></div>
+<div class="profile-menu hidden" id="profileMenu" role="menu" aria-label="Workspace profile menu"><div class="profile-menu-head"><span class="menu-avatar profile-initials" data-profile-avatar>SH</span><span><strong data-profile-name>Workspace owner</strong><small>Private workspace</small></span></div><div class="profile-menu-items"><button type="button" role="menuitem" data-profile-action="edit"><svg class="ui-icon" aria-hidden="true"><use href="#icon-user"></use></svg>My Profile</button><button type="button" role="menuitem" data-profile-action="settings"><svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg>Account Settings</button><div class="profile-menu-rule"></div></div></div>
 <div class="scrim" id="scrim"></div>
 <div class="toast" id="toast"></div>
 <div class="modal-backdrop hidden" id="contentModal" aria-hidden="true"><div class="modal content-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose">×</button><div id="modalBody"></div></div></div>
 <div class="profile-modal-backdrop hidden" id="profileModal" aria-hidden="true"><section class="profile-dialog" role="dialog" aria-modal="true" aria-labelledby="profileDialogTitle"><div class="profile-dialog-header"><div><span class="eyebrow">PERSONALISATION</span><h2 id="profileDialogTitle">My Profile</h2><p>Update how you appear in your private workspace.</p></div><button class="profile-dialog-close" type="button" id="profileDialogClose" aria-label="Close profile"><svg class="ui-icon" aria-hidden="true"><use href="#icon-x"></use></svg></button></div><form id="profileForm"><div class="profile-photo-row"><span class="profile-large-avatar profile-initials" id="profileEditAvatar">SH</span><div><label for="profilePhotoFile" class="profile-upload-label"><svg class="ui-icon" aria-hidden="true"><use href="#icon-camera"></use></svg> Upload photo</label><input id="profilePhotoFile" type="file" accept="image/png,image/jpeg,image/webp" /><button type="button" id="profileRemovePhoto" class="profile-remove-photo">Remove photo</button><p>PNG, JPG or WebP. Your image is resized before saving.</p></div></div><label class="profile-field-label" for="profileDisplayName">Display name</label><input id="profileDisplayName" maxlength="48" minlength="2" required autocomplete="name" placeholder="Workspace owner" /><p class="profile-form-error" role="alert" id="profileFormError"></p><div class="profile-dialog-actions"><button class="small-button" type="button" id="profileCancel">Cancel</button><button class="button button-primary" type="submit" id="profileSave">Save changes</button></div></form></section></div>
-<div class="login-gate hidden" id="loginGate" aria-hidden="true">
-  <div class="login-card">
-    <div class="login-mark"><span class="brand-mark"><img src="/icons/socialhub-mark.svg" alt="" /></span></div>
-    <div class="eyebrow">PRIVATE ANALYTICS WORKSPACE</div>
-    <h1>Welcome to SocialHub<span>.</span></h1>
-    <p>Sign in to view your connected social accounts and analytics.</p>
-    <form id="loginForm">
-      <label for="loginPassword">Workspace password</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required />
-      <button class="button button-primary login-submit" id="loginSubmit" type="submit">Sign in</button>
-      <div class="login-message" id="loginMessage" role="status"></div>
-    </form>
-    <div class="login-foot">Your social account tokens remain encrypted on the SocialHub server.</div>
-  </div>
-</div>
 <script src="/app.js"></script>
 </body>
 </html>
