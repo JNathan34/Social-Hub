@@ -22,7 +22,12 @@ app.use((req, res, next) => {
 });
 app.use(express.json({ limit: '256kb' }));
 app.use(express.static(path.join(__dirname, 'public'), { setHeaders(res, filePath) { if (filePath.endsWith('sw.js') || filePath.endsWith('index.html') || filePath.endsWith('manifest.webmanifest')) res.setHeader('Cache-Control', 'no-cache'); } }));
-app.use(authGate);
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/') && req.method !== 'GET' && !sameOrigin(req)) {
+    return res.status(403).json({ error: 'Request origin could not be verified.' });
+  }
+  next();
+});
 
 const PORT = Number(process.env.PORT || 3000);
 const HOST = process.env.HOST || '127.0.0.1';
@@ -34,7 +39,6 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 const STORE_PATH = path.join(DATA_DIR, 'socialhub.store.json');
 const TOKEN_KEY_PATH = path.join(DATA_DIR, '.token-key');
 const LEGACY_TOKEN_KEY_PATH = path.join(__dirname, '.token-key');
-const SESSION_KEY_PATH = path.join(DATA_DIR, '.session-key');
 const pendingOAuth = new Map();
 const PLATFORM_NAMES = { facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube' };
 
@@ -49,12 +53,6 @@ function encryptionKey() {
   return crypto.createHash('sha256').update(fs.readFileSync(TOKEN_KEY_PATH)).digest();
 }
 const ENC_KEY = encryptionKey();
-function sessionSecret() {
-  if (process.env.SESSION_SECRET && process.env.SESSION_SECRET.length >= 32) return process.env.SESSION_SECRET;
-  if (!fs.existsSync(SESSION_KEY_PATH)) fs.writeFileSync(SESSION_KEY_PATH, crypto.randomBytes(48), { mode: 0o600 });
-  return fs.readFileSync(SESSION_KEY_PATH);
-}
-const SESSION_SECRET = sessionSecret();
 function encrypt(value) {
   const iv = crypto.randomBytes(12); const cipher = crypto.createCipheriv('aes-256-gcm', ENC_KEY, iv);
   const data = Buffer.concat([cipher.update(JSON.stringify(value), 'utf8'), cipher.final()]);
@@ -101,46 +99,10 @@ function clearStateCookie(res, platform) {
   const secure = APP_URL.startsWith('https://');
   res.setHeader('Set-Cookie', `sh_oauth_${platform}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secure ? '; Secure' : ''}`);
 }
-function signSession(payload) {
-  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
-  const sig = crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
-  return `${body}.${sig}`;
-}
-function validSession(req) {
-  if (!process.env.APP_PASSWORD || process.env.APP_PASSWORD.length < 16) return false;
-  const token = cookieValue(req, 'sh_session');
-  const [body, supplied] = token.split('.');
-  if (!body || !supplied) return false;
-  const expected = crypto.createHmac('sha256', SESSION_SECRET).update(body).digest();
-  let actual; try { actual = Buffer.from(supplied, 'base64url'); } catch { return false; }
-  if (actual.length !== expected.length || !crypto.timingSafeEqual(actual, expected)) return false;
-  try { const data = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')); return data.exp > Date.now(); } catch { return false; }
-}
-function setSessionCookie(res) {
-  const secure = APP_URL.startsWith('https://');
-  const value = signSession({ exp: Date.now() + 7 * 24 * 60 * 60 * 1000 });
-  res.setHeader('Set-Cookie', `sh_session=${encodeURIComponent(value)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${7 * 24 * 60 * 60}${secure ? '; Secure' : ''}`);
-}
-function clearSessionCookie(res) {
-  const secure = APP_URL.startsWith('https://');
-  res.setHeader('Set-Cookie', `sh_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0${secure ? '; Secure' : ''}`);
-}
 function sameOrigin(req) {
   const origin = req.headers.origin;
   if (!origin) return true;
   try { return new URL(origin).origin === new URL(APP_URL).origin; } catch { return false; }
-}
-const loginAttempts = new Map();
-function authGate(req, res, next) {
-  const publicApi = ['/api/health', '/api/session', '/api/login', '/api/logout'];
-  if (req.path.startsWith('/api/') && req.method !== 'GET' && !sameOrigin(req)) {
-    return res.status(403).json({ error: 'Request origin could not be verified.' });
-  }
-  if (publicApi.includes(req.path)) return next();
-  if ((req.path.startsWith('/api/') || req.path.startsWith('/auth/')) && !validSession(req)) {
-    return res.status(401).json({ error: 'Please sign in to your private SocialHub workspace.', unauthenticated: true });
-  }
-  next();
 }
 function addOAuthState(platform, verifier = null) {
   const state = crypto.randomBytes(24).toString('hex');
@@ -539,25 +501,6 @@ app.get('/auth/:platform/callback', async (req,res) => {
     safeRedirectError(res, platform, err.message || 'connection failed.');
   }
 });
-
-app.get('/api/session', (req, res) => res.json({ authenticated: validSession(req), passwordConfigured: !!process.env.APP_PASSWORD && process.env.APP_PASSWORD.length >= 16, appUrl: APP_URL }));
-app.post('/api/login', (req, res) => {
-  if (!process.env.APP_PASSWORD || process.env.APP_PASSWORD.length < 16) return res.status(503).json({ error: 'Set APP_PASSWORD to a private password of at least 16 characters in the server environment, then restart SocialHub.' });
-  const ip = req.ip || req.socket.remoteAddress || 'unknown';
-  const now = Date.now();
-  const entry = loginAttempts.get(ip) || { count: 0, until: now + 15 * 60 * 1000 };
-  if (entry.until < now) { entry.count = 0; entry.until = now + 15 * 60 * 1000; }
-  if (entry.count >= 10) return res.status(429).json({ error: 'Too many sign-in attempts. Try again in 15 minutes.' });
-  const submitted = String(req.body?.password || '');
-  const expected = crypto.createHash('sha256').update(process.env.APP_PASSWORD).digest();
-  const actual = crypto.createHash('sha256').update(submitted).digest();
-  if (!crypto.timingSafeEqual(expected, actual)) {
-    entry.count += 1; loginAttempts.set(ip, entry);
-    return res.status(401).json({ error: 'That password is not correct.' });
-  }
-  loginAttempts.delete(ip); setSessionCookie(res); res.json({ ok: true });
-});
-app.post('/api/logout', (req, res) => { clearSessionCookie(res); res.json({ ok: true }); });
 
 app.get('/api/state', (req,res) => res.json(dashboardState()));
 app.post('/api/profile', (req,res) => {
