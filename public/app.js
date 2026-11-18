@@ -156,7 +156,7 @@ function overviewPage() {
 }
 function platformPage(p) {
   const a=account(p); const s=snapshot(p); const m=s?.metrics; const profile=s?.profile || a?.profile;
-  if(!a) return `<div class="connection-layout"><section class="empty-state connection-hero"><div class="empty-icon platform-${p}">${icon(p)}</div><div class="eyebrow">ACCOUNT CONNECTION</div><h3>Connect your ${PLATFORM[p].name} account</h3><div>Bring your ${PLATFORM[p].name} analytics, audience information and recent content into your SocialHub dashboard.</div><button class="button button-primary" data-page="connections">${icon('plus')} Connect ${PLATFORM[p].name}</button><p class="connect-helper">Only the permissions you approve will be requested.</p></section><aside class="panel setup-panel"><span class="setup-label">GETTING STARTED</span><h2>Before you connect</h2><p class="setup-intro">A quick checklist to make sure your connection works.</p><div class="setup-item"><span class="setup-step">1</span><div><strong>Check account eligibility</strong><p>${esc(PLATFORM[p].needs)}</p></div></div><div class="setup-item"><span class="setup-step">2</span><div><strong>Configure the developer app</strong><p>Add the OAuth credentials and callback URL in Settings.</p></div></div><div class="setup-item"><span class="setup-step">3</span><div><strong>Authorise and sync</strong><p>Sign in through the platform and let SocialHub load the available metrics.</p></div></div><button class="text-link" data-page="settings">View connection setup ${icon('arrow-right')}</button></aside></div>`;
+  if(!a) return `<div class="connection-layout"><section class="empty-state connection-hero"><div class="empty-icon platform-${p}">${icon(p)}</div><div class="eyebrow">ACCOUNT CONNECTION</div><h3>Connect your ${PLATFORM[p].name} account</h3><div>Bring your ${PLATFORM[p].name} analytics, audience information and recent content into your SocialHub dashboard.</div>${state?.config?.find(x=>x.platform===p)?.configured ? `<a class="button button-primary" href="/auth/${p}/start">${icon('plus')} Connect ${PLATFORM[p].name}</a>` : `<button class="button button-primary" data-page="settings">${icon('settings')} Configure ${PLATFORM[p].name}</button>`}<p class="connect-helper">Only the permissions you approve will be requested.</p></section><aside class="panel setup-panel"><span class="setup-label">GETTING STARTED</span><h2>Before you connect</h2><p class="setup-intro">A quick checklist to make sure your connection works.</p><div class="setup-item"><span class="setup-step">1</span><div><strong>Check account eligibility</strong><p>${esc(PLATFORM[p].needs)}</p></div></div><div class="setup-item"><span class="setup-step">2</span><div><strong>Configure the developer app</strong><p>Add the OAuth credentials and callback URL in Settings.</p></div></div><div class="setup-item"><span class="setup-step">3</span><div><strong>Authorise and sync</strong><p>Sign in through the platform and let SocialHub load the available metrics.</p></div></div><button class="text-link" data-page="settings">View connection setup ${icon('arrow-right')}</button></aside></div>`;
   const followers=m?.followers ?? profile?.followers ?? profile?.subscribers;
   const contentCount=m?.contentCount ?? profile?.videos ?? null;
   const content=topContent(p,6);
@@ -369,6 +369,15 @@ document.addEventListener('keydown',e=>{
 });
 window.addEventListener('resize',()=>closeProfileMenu());
 document.addEventListener('click', async e=>{
+  const connectPicker=e.target.closest('[data-connect-picker]');
+  if(connectPicker){
+    e.preventDefault();
+    if(currentPage!=='connections'){ navigate('connections'); return; }
+    const target=$('.connect-grid');
+    target?.scrollIntoView({behavior:'smooth',block:'center'});
+    target?.querySelector('a[href^="/auth/"],button[data-page="settings"]')?.focus({preventScroll:true});
+    return;
+  }
   const pageBtn=e.target.closest('[data-page]'); if(pageBtn){ e.preventDefault(); if(pageBtn.dataset.filterPlatform) contentFilter=pageBtn.dataset.filterPlatform; navigate(pageBtn.dataset.page); return; }
   const ref=e.target.closest('[data-refresh-platform]');if(ref){await refresh(ref.dataset.refreshPlatform);return;}
   const disc=e.target.closest('[data-disconnect]');if(disc){await disconnect(disc.dataset.disconnect);return;}
