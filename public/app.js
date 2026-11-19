@@ -28,6 +28,24 @@ async function api(url, options={}) {
   return data;
 }
 
+// Persist the preferred colour scheme and expose a single accessible toggle.
+(function initTheme(){
+  let saved='dark';
+  try { saved=localStorage.getItem('socialhub-theme')||'dark'; } catch {}
+  if(!['dark','light'].includes(saved)) saved='dark';
+  const root=document.documentElement;
+  root.dataset.theme=saved;
+  const button=document.querySelector('#themeToggle');
+  const syncIcon=()=>{ if(button){ const use=button.querySelector('use'); if(use) use.setAttribute('href',root.dataset.theme==='dark'?'#icon-moon':'#icon-sun'); button.setAttribute('aria-label',root.dataset.theme==='dark'?'Switch to light mode':'Switch to dark mode'); } };
+  syncIcon();
+  button?.addEventListener('click',()=>{
+    const next=root.dataset.theme==='dark'?'light':'dark';
+    root.dataset.theme=next;
+    try { localStorage.setItem('socialhub-theme',next); } catch {}
+    syncIcon();
+  });
+})();
+
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault(); installPrompt=event; $('#installBtn').hidden=false;
 });
@@ -46,7 +64,7 @@ function snapshot(platform) { return account(platform)?.snapshot || null; }
 function icon(name) { return `<svg class="ui-icon" aria-hidden="true"><use href="#icon-${name}"></use></svg>`; }
 function platformLogo(p) { return `<span class="platform-icon ${PLATFORM[p].cls}">${icon(p)}</span>`; }
 function pageMeta() {
-  const titles={overview:['Overview','A clear view of your connected social channels.'],facebook:['Facebook','Track your connected Facebook Page.'],instagram:['Instagram','Review your professional Instagram account.'],tiktok:['TikTok','See your TikTok profile and published videos.'],youtube:['YouTube','Channel analytics, recent videos and audience insights.'],audience:['Audience','Demographic information returned by connected platform APIs.'],content:['Content','Your recent content across all connected platforms.'],connections:['Connections','Connect and manage your social media accounts.'],settings:['Settings','Developer app setup and website security information.']};
+  const titles={overview:['Overview','A clear view of your connected social channels.'],analytics:['Analytics boards','Live performance boards built from your connected platform data.'],regions:['Regional boards','Geographic audience insights returned by connected platform APIs.'],facebook:['Facebook','Track your connected Facebook Page.'],instagram:['Instagram','Review your professional Instagram account.'],tiktok:['TikTok','See your TikTok profile and published videos.'],youtube:['YouTube','Channel analytics, recent videos and audience insights.'],audience:['Audience','Demographic information returned by connected platform APIs.'],content:['Content','Your recent content across all connected platforms.'],connections:['Connections','Connect and manage your social media accounts.'],settings:['Settings','Developer app setup and website security information.']};
   const [title,sub]=titles[currentPage]||titles.overview; $('#pageTitle').innerHTML=`${esc(title)}<span>.</span>`; $('#pageSubtitle').textContent=sub; $('#breadcrumb').textContent=title; $('#breadcrumb').dataset.currentPage=currentPage; $('#breadcrumb').dataset.page=currentPage; document.body.dataset.currentPage=currentPage; document.body.dataset.connected=PLATFORM[currentPage]&&isConnected(currentPage)?'yes':'no';
   document.querySelectorAll('[data-page].nav-link').forEach(b=>b.classList.toggle('active',b.dataset.page===currentPage));
 }
@@ -154,6 +172,48 @@ function overviewPage() {
   const content=topContent('all',6);
   return `<div class="metric-grid">${metricCard('Audience across accounts',compact(totals.followers),'Sum of platform follower counts','♙')}${metricCard('Reported views',compact(totals.views),'As reported by connected APIs','◉')}${metricCard('Likes + comments',compact((totals.likes||0)+(totals.comments||0)),'Available recent content totals','↗')}${metricCard('Connected platforms',`${totals.connectedPlatforms}/4`,'Authorised accounts','⌘')}</div><div class="overview-grid">${buildChart('all')}<section class="panel"><div class="panel-head"><div><div class="panel-title">Connected platforms</div><div class="panel-subtitle">Account status and audience size</div></div><button class="text-link" data-page="connections">Manage ↗</button></div><div class="platform-list">${platformRows()}</div></section></div><div class="section-heading"><div><h2>Top performing content</h2><p>Ranked using view counts where the platform API supplies them.</p></div><button class="text-link" data-page="content">View content ${icon("arrow-right")}</button></div>${contentGrid(content)}<div class="info-box">Combined follower totals are the sum of each connected account's audience count, not a deduplicated count of unique people. Metrics and reporting windows differ by platform.</div>`;
 }
+
+function analyticsBoardsPage() {
+  const totals=state?.totals||{};
+  const connected=Object.keys(state?.accounts||{});
+  if(!connected.length) return emptyBlock('Connect your channels to unlock analytics','These boards populate from real account refreshes. SocialHub does not insert sample values or claim second-by-second updates.','Connect accounts');
+  const platformCards=connected.map(p=>{
+    const s=snapshot(p)||{}, m=s.metrics||{}, profile=s.profile||account(p)?.profile||{};
+    const followers=m.followers??profile.followers??profile.subscribers;
+    const views=m.views??m.reach;
+    const engagement=(Number(m.likes)||0)+(Number(m.comments)||0)+(Number(m.shares)||0);
+    return `<section class="panel board-card"><div class="panel-head"><div><div class="panel-title">${esc(PLATFORM[p].name)} performance</div><div class="panel-subtitle">Latest values returned by the platform</div></div>${platformLogo(p)}</div><div class="board-kpis"><div><small>Followers / subscribers</small><strong>${compact(followers)}</strong></div><div><small>Views / reach</small><strong>${compact(views)}</strong></div><div><small>Engagement actions</small><strong>${compact(engagement)}</strong></div></div><div class="board-foot"><span class="online-dot"></span> Connected · refreshed with account data</div></section>`;
+  }).join('');
+  const content=topContent('all',3);
+  return `<div class="metric-grid analytics-metrics">
+    ${metricCard('Total audience',compact(totals.followers),'Combined account audience','♙')}
+    ${metricCard('Total reported views',compact(totals.views),'Platform-reported views','◉')}
+    ${metricCard('Likes and comments',compact((totals.likes||0)+(totals.comments||0)),'Available recent content totals','↗')}
+    ${metricCard('Active channels',`${connected.length} / 4`,'Authorised platforms','⌘')}
+  </div>
+  <div class="section-heading"><div><h2>Performance overview</h2><p>Explore views, audience growth and engagement using the available platform history.</p></div><span class="live-label"><i></i> Updates on refresh</span></div>
+  ${buildChart('all')}
+  <div class="section-heading"><div><h2>Platform performance</h2><p>Account-level metrics returned by each connected service.</p></div></div>
+  <div class="board-grid">${platformCards}</div>
+  <div class="board-grid two-up">
+    <section class="panel board-card"><div class="panel-title">Top content</div><div class="panel-subtitle">Highest reported views across connected channels</div>${contentGrid(content)}</section>
+    <section class="panel board-card"><div class="panel-title">Audience by channel</div><div class="panel-subtitle">Current followers and subscribers</div><div class="platform-list">${platformRows()}</div></section>
+  </div>
+  <div class="info-box">Reporting windows, definitions and refresh limits vary by platform. Missing metrics are shown as unavailable rather than estimated. Use Refresh to request the latest permitted data.</div>`;
+}
+function regionalBoardsPage() {
+  const reports=[];
+  for(const platform of Object.keys(PLATFORM)) {
+    const demo=snapshot(platform)?.demographics;
+    if(!demo?.rows?.length) continue;
+    const headers=(demo.headers||[]).map(h=>String(typeof h==='object'?(h.name||''):(h||'')));
+    const geoIndex=headers.findIndex(h=>/country|region|geograph|city|location/i.test(h));
+    if(geoIndex>=0) reports.push({platform,headers,rows:demo.rows});
+  }
+  if(!reports.length) return `<div class="panel regional-empty"><div class="empty-icon">${icon('globe')}</div><h3>Regional data isn't available yet</h3><p>No connected platform has returned a country, region or location breakdown. Availability depends on account type, API permissions and provider reporting rules.</p><button class="button button-primary" data-page="audience">View audience reports</button></div><div class="board-grid"><section class="panel board-card"><div class="panel-title">Country leaderboard</div><div class="panel-subtitle">Waiting for regional API data</div><div class="empty-chart">No regional breakdown returned</div></section><section class="panel board-card"><div class="panel-title">Regional engagement</div><div class="panel-subtitle">Waiting for regional API data</div><div class="empty-chart">No regional breakdown returned</div></section></div>`;
+  return reports.map(r=>`<section class="panel board-card regional-report"><div class="panel-head"><div><div class="panel-title">${esc(PLATFORM[r.platform].name)} · regional audience</div><div class="panel-subtitle">Geographic breakdown returned directly by the platform</div></div><span class="status-pill">API data</span></div><div class="table-scroll"><table class="demographics-table"><thead><tr>${r.headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${r.rows.map(row=>`<tr>${row.map(cell=>`<td>${esc(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`).join('');
+}
+
 function platformPage(p) {
   const a=account(p); const s=snapshot(p); const m=s?.metrics; const profile=s?.profile || a?.profile;
   if(!a) return `<div class="connection-layout"><section class="empty-state connection-hero"><div class="empty-icon platform-${p}">${icon(p)}</div><div class="eyebrow">ACCOUNT CONNECTION</div><h3>Connect your ${PLATFORM[p].name} account</h3><div>Bring your ${PLATFORM[p].name} analytics, audience information and recent content into your SocialHub dashboard.</div>${state?.config?.find(x=>x.platform===p)?.configured ? `<a class="button button-primary" href="/auth/${p}/start">${icon('plus')} Connect ${PLATFORM[p].name}</a>` : `<button class="button button-primary" data-page="settings">${icon('settings')} Configure ${PLATFORM[p].name}</button>`}<p class="connect-helper">Only the permissions you approve will be requested.</p></section><aside class="panel setup-panel"><span class="setup-label">GETTING STARTED</span><h2>Before you connect</h2><p class="setup-intro">A quick checklist to make sure your connection works.</p><div class="setup-item"><span class="setup-step">1</span><div><strong>Check account eligibility</strong><p>${esc(PLATFORM[p].needs)}</p></div></div><div class="setup-item"><span class="setup-step">2</span><div><strong>Configure the developer app</strong><p>Add the OAuth credentials and callback URL in Settings.</p></div></div><div class="setup-item"><span class="setup-step">3</span><div><strong>Authorise and sync</strong><p>Sign in through the platform and let SocialHub load the available metrics.</p></div></div><button class="text-link" data-page="settings">View connection setup ${icon('arrow-right')}</button></aside></div>`;
@@ -199,6 +259,8 @@ function render() {
   pageMeta(); updateStatusDots(); lastSyncText(); updateProfileUI();
   const content=$('#pageContent');
   if(currentPage==='overview') content.innerHTML=overviewPage();
+  else if(currentPage==='analytics') content.innerHTML=analyticsBoardsPage();
+  else if(currentPage==='regions') content.innerHTML=regionalBoardsPage();
   else if(PLATFORM[currentPage]) content.innerHTML=platformPage(currentPage);
   else if(currentPage==='content') content.innerHTML=contentPage();
   else if(currentPage==='audience') content.innerHTML=audiencePage();
