@@ -1,6 +1,6 @@
 {
   "name": "socialhub",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "description": "SocialHub installable private social analytics web app",
   "type": "module",
