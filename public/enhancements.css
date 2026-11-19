@@ -152,3 +152,50 @@
   .sidebar .nav .nav-link { min-height:54px; height:54px; flex-basis:54px; }
   .sidebar .nav {padding-right:2px;}
 }
+
+
+/* SocialHub 1.5 analytics dashboards and accessible light theme */
+:root { color-scheme: dark; }
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg:#f3f6fa; --sidebar:#fff; --panel:#fff; --panel2:#f7f9fc;
+  --line:#e1e7ef; --text:#172235; --muted:#64748b; --soft:#475569;
+  --shadow:0 8px 28px rgba(26,43,68,.07);
+}
+html[data-theme="light"] body { background:#f3f6fa; color:#172235; }
+html[data-theme="light"] .sidebar,html[data-theme="light"] .topbar { background:#fff; border-color:#e2e8f0; }
+html[data-theme="light"] .brand,html[data-theme="light"] .page-heading h1,html[data-theme="light"] .crumb-link.current { color:#172235; }
+html[data-theme="light"] .workspace,html[data-theme="light"] .metric-card,html[data-theme="light"] .panel,html[data-theme="light"] .chart-panel,html[data-theme="light"] .connect-card,html[data-theme="light"] .empty-state,html[data-theme="light"] .loading-card { background:#fff; border-color:#e1e7ef; box-shadow:0 8px 24px #1d35570b; }
+html[data-theme="light"] .nav-link { color:#536277; }
+html[data-theme="light"] .nav-link:hover { background:#f1f5f9; color:#172235; }
+html[data-theme="light"] .nav-link.active { background:#f0edff; color:#5d43b4; box-shadow:inset 3px 0 #8664e7; }
+html[data-theme="light"] .nav-glyph,html[data-theme="light"] .metric-top,html[data-theme="light"] .panel-subtitle,html[data-theme="light"] .page-heading p,html[data-theme="light"] .breadcrumb { color:#64748b; }
+html[data-theme="light"] .button,html[data-theme="light"] .icon-button { background:#fff; color:#334155; border-color:#d5deea; }
+html[data-theme="light"] .button-primary { background:#7655d6; color:#fff; border-color:#7655d6; }
+html[data-theme="light"] .footer { border-color:#e2e8f0; color:#718096; }
+html[data-theme="light"] .info-box { background:#f0f5fb; border-color:#dce6f2; color:#52647a; }
+html[data-theme="light"] .table-scroll table th { background:#f7f9fc; color:#536277; }
+html[data-theme="light"] .table-scroll table td { color:#334155; border-color:#e7edf4; }
+html[data-theme="light"] .profile-menu,html[data-theme="light"] .profile-dialog { background:#fff; color:#172235; border-color:#dbe3ed; }
+html[data-theme="light"] .profile-menu-items button { color:#334155; }
+html[data-theme="light"] .profile-menu-items button:hover { background:#f1f5f9; color:#172235; }
+html[data-theme="light"] .profile-photo-row { background:#f7f9fc; border-color:#e1e7ef; }
+.theme-toggle .ui-icon { width:19px; height:19px; }
+.board-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:18px 0; }
+.board-card { min-width:0; }
+.board-kpis { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:23px 0 16px; }
+.board-kpis>div { display:flex; flex-direction:column; gap:7px; min-width:0; }
+.board-kpis small { color:var(--muted); font-size:11px; }
+.board-kpis strong { font:800 23px var(--head); letter-spacing:-.7px; }
+.board-foot { border-top:1px solid var(--line); padding-top:13px; color:var(--muted); font-size:11px; }
+.live-label { display:inline-flex; align-items:center; gap:7px; color:var(--muted); font-size:11px; white-space:nowrap; }
+.live-label i { width:7px; height:7px; border-radius:50%; background:#20bd86; box-shadow:0 0 9px #20bd8666; }
+.regional-empty { text-align:center; padding:36px 24px; margin-bottom:16px; }
+.regional-empty h3 { font:800 20px var(--head); margin:12px 0 7px; }
+.regional-empty p { max-width:660px; margin:0 auto 18px; color:var(--muted); line-height:1.6; }
+.empty-chart { min-height:115px; display:grid; place-items:center; margin-top:15px; border:1px dashed var(--line); border-radius:12px; color:var(--muted); font-size:12px; }
+.regional-report { margin-bottom:16px; }
+.analytics-metrics { grid-template-columns:repeat(4,minmax(0,1fr)); }
+html[data-theme="light"] .board-kpis small,html[data-theme="light"] .board-foot { color:#64748b; }
+@media(max-width:1050px) { .board-grid { grid-template-columns:1fr; } .analytics-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:620px) { .board-kpis { grid-template-columns:1fr 1fr; } .analytics-metrics { grid-template-columns:1fr 1fr; } .live-label { display:none; } }
