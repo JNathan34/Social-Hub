@@ -8,7 +8,7 @@
   A private, beautifully designed dashboard for exploring your channels, content and audience.
 
   <p>
-    <img alt="Version" src="https://img.shields.io/badge/version-1.4.0-9467e6?style=flat-square">
+    <img alt="Version" src="https://img.shields.io/badge/version-1.5.0-9467e6?style=flat-square">
     <img alt="Node.js 20+" src="https://img.shields.io/badge/Node.js-20%2B-43853d?style=flat-square&logo=node.js&logoColor=white">
     <img alt="PWA" src="https://img.shields.io/badge/installable-PWA-8964e8?style=flat-square">
     <img alt="Private workspace" src="https://img.shields.io/badge/workspace-private-1a2637?style=flat-square">
@@ -86,6 +86,12 @@ docker compose up --build -d
 ```
 
 For hosted deployments, serve over **HTTPS**, use persistent storage, and configure `APP_URL` correctly. See the [complete setup and deployment guide](docs/SETUP.md).
+
+## Analytics boards and regional reporting
+
+SocialHub 1.5 adds dedicated Analytics boards and Regional boards. Analytics combine the latest API-returned audience, views, engagement and channel metrics, with historical charts and per-platform comparison cards. Regional reports display geographic rows only when a connected provider returns them. Use **Refresh** to request updated platform data; refresh timing and available metrics depend on each provider's API permissions and limits.
+
+The workspace supports both dark and light themes, with the selected appearance saved locally in the browser.
 
 ## Social platforms
 
